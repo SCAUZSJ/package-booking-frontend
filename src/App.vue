@@ -1,8 +1,10 @@
 <template>
   <div id="app">
     <div id="nav">
-      <router-link to="/">Home</router-link> |
-      <router-link to="/about">About</router-link>
+      <a-row type="flex" justify="center"> 
+         <router-link to="/user">用户界面</router-link> |
+      <router-link to="/manager">管理界面</router-link>
+      </a-row>
     </div>
     <router-view/>
   </div>
@@ -13,7 +15,7 @@
   font-family: 'Avenir', Helvetica, Arial, sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  text-align: center;
+  // text-align: center;
   color: #2c3e50;
 }
 #nav {
