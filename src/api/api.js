@@ -24,6 +24,26 @@ export default {
                 status
             }
         });
+    },
+    appointmentTime(id,apTime){
+        return axios({
+            url:base_url+'/parcels/'+id,
+            method:'patch',
+            params:{
+                apTime
+            },
+           
+        });
+    },
+    changeStatus(id,data){
+        return axios({
+            url: base_url+'/parcels/'+id,
+            method: 'put',
+            data: JSON.stringify(data),
+            headers: {
+                'Content-Type': 'application/json'
+            }
+        });
     }
     
 

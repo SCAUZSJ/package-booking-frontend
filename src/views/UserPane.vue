@@ -11,7 +11,14 @@
       <a-row type="flex" justify="center">
           <a-col :span="2">取件时间：</a-col>
           <a-col :span="4">
-              <a-date-picker @change="onChange" :showTime="true" format="YYYY-MM-DD, h:mm:ss"></a-date-picker>
+              <a-date-picker 
+              @change="onChange" 
+              :showTime="true" 
+              format="YYYY-MM-DD, h:mm:ss"
+              :disabledDate="disabledDate"
+              :disabledTime="disabledDateTime"
+             
+              ></a-date-picker>
           </a-col>
       </a-row>
       <a-row type="flex" justify="center">
@@ -28,6 +35,7 @@
 </template>
 
 <script>
+import moment from "moment";
 export default {
   data() {
     return {
@@ -46,18 +54,26 @@ export default {
 
   methods: {
     onChange(date, dateString) {
-        var date = new Date(dateString); 
-        var str = date.getTime(); 
-        this.apTime = str;
+      var date = new Date(dateString);
+      var str = date.getTime();
+      this.apTime = str;
     },
-    submit() {
-      if (this.parcelNum == undefined || this.parcelNum === "") {
-        return;
+    async submit() {
+      const res = await this.$API.appointmentTime(this.parcelNum, this.apTime);
+      if (res.data.code === 200) {
+        this.$message.success("预约成功");
       }
-      if (this.apTime == undefined || this.apTime === "") {
-        return;
-      }
-    }
+    }, 
+     disabledDate(current) {
+      return current && current <moment().endOf('day');
+    },
+     disabledDateTime() {
+      return {
+        disabledHours: () => [0,1,2,3,4,5,6,7,8,20,21,22,23]
+      };
+    },
+
+    
   },
 
   filters: {}

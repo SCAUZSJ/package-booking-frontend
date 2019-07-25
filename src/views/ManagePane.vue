@@ -70,11 +70,11 @@
         <a-col :span="8">
         <div class="table">
             <a-table :columns="columns" :dataSource="data" :pagination="false"> 
-            <template slot="apTime" slot-scope="text,record">
-                {{record.apTime|timeFilter}}
+            <template slot="apTime" slot-scope="text,record"  >
+                <span v-if="record.status!='未预约'" > {{record.apTime|timeFilter}} </span>
             </template>
-            <template slot="op" slot-scope="text, record">
-                <a-button v-if="record.status === '已预约'" type="primary">确认收货</a-button>
+            <template slot="op" slot-scope="text, record, index">
+                <a-button v-if="record.status === '已预约'" type="primary" @click="changeStatus(index)">确认收货</a-button>
             </template>
             </a-table>
         </div>
@@ -169,8 +169,22 @@ export default {
         const res = await this.$API.addParcel(postData);
         if(res.data.code === 201){
             this.getData('ALL');
+            this.form ={
+                parcelNum:'',
+                owner:'',
+                phone:'',
+                weight:''
+            }
+            this.$message.success('确认成功');
         }
         console.log(res);
+    },
+    async changeStatus(index){
+        this.data[index].status = '已取货';
+        const res = await this.$API.changeStatus(this.data[index].id,this.data[index]);
+        if(res.data.code === 200){
+            this.getData('ALL')
+        }
     }
   },
 
