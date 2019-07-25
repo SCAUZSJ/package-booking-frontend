@@ -19,11 +19,11 @@
                 <a-modal
                 v-model="visible"
                 title="包裹入库"
-                @onOk="add"
+                @onOk="submit"
                 >
                 <template slot="footer">
                     <a-button key="back" @click="visible = false">取消</a-button>
-                    <a-button key="submit" type="primary"  @click="add">
+                    <a-button key="submit" type="primary"  @click="submit">
                     确定
                     </a-button>
                 </template>
@@ -89,7 +89,7 @@ import moment from "moment";
 export default {
   data() {
     return {
-      visible: true,
+      visible: false,
       columns: [
         {
           title: "运单号",
@@ -125,11 +125,7 @@ export default {
       ],
       data: [
         {
-          id: "22",
-          owner: "2232",
-          phone: "231331313",
-          status: "已预约",
-          apTime: 1564022727
+         
         }
       ],
       form:{
@@ -152,14 +148,37 @@ export default {
   },
 
   methods: {
-    getData(status) {},
-    add() {
-        
+    async getData(status) {
+        const res = await this.$API.getParcels(status);
+        if(res.data.code === 200){
+            console.log(res.data);
+            this.data = res.data.data;
+        }
+    },
+    submit(){
+        this.visible = false;
+        this.add();
+    },
+    async add() {
+        let postData = {
+            id:this.form.parcelNum,
+            owner:this.form.owner,
+            phone:this.form.phone,
+            weight:this.form.weight
+        }
+        const res = await this.$API.addParcel(postData);
+        if(res.data.code === 201){
+            this.getData('ALL');
+        }
+        console.log(res);
     }
   },
 
   filters: {
     timeFilter(val) {
+        if(val==null){
+            return ''
+        }
       return moment(val).format("YYYY-MM-DD HH:mm:ss");
     }
   }

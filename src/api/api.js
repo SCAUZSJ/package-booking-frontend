@@ -1,12 +1,14 @@
 import Vue from 'vue'
 import axios from 'axios'
 import VueAxios from 'vue-axios'
-Vue.use(VueAxios, axios);
 
+Vue.use(VueAxios, axios)
+
+const base_url = 'http://localhost:8080';
 export default {
     addParcel(data) {
         return axios({
-            url: 'http://localhost:8080/parcels',
+            url: base_url+'/parcels',
             method: 'post',
             data: JSON.stringify(data),
             headers: {
@@ -14,6 +16,15 @@ export default {
             }
         });
     },
+    getParcels(status){
+        return axios({
+            url:base_url+'/parcels',
+            method:'get',
+            params:{
+                status
+            }
+        });
+    }
     
 
 }
